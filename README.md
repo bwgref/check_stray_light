@@ -9,7 +9,8 @@ usage: ./check_stray_light.sh RA DEC PA
 
 All values must be in decimal degrees.
 
-- Output:
+Output:
+
 Col 1: PA
 Col2: FPMA Total Loss
 Col3: FPMB Total Loss
