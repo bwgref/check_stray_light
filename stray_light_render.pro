@@ -46,56 +46,13 @@ pro stray_light_render, badpix=badpix
      dmask0=LEAKAGE_MAP(OAA_var, az_angle, pa*dr)*Flux(ii)
 
                                 ;if(status.silent ne 1) then begin
-     if(1) then begin
-                                ; find index of the OA given in mm
-                                ;get_oa,nu.oa, pos=oa_index
-        ;; make_astr_nustar, status.ra, status.dec, pa, astr=astr, oa=mm2det(nu.oa)
 
-        ;; make_astr_nustar, status.ra, status.dec, pa, astr=astra, oa=mm2det(nu.oaa)
-        ;; make_astr_nustar, status.ra, status.dec, pa, astr=astrb, oa=mm2det(nu.oab)
-
-        dmask0_fp1=fltarr(n_detx, n_dety) 
-        dmask0_fp2=fltarr(n_detx, n_dety) 
-                                ; Kaya's code.
-        ;; for i=0, n_detx-1 do begin 
-        ;;    for j=0, n_dety-1 do begin
-        ;;       dmask0_fp1(i,j) = (dmask0(i,j) gt 0.0)? dmask0(i, j) : 0.0
-        ;;       dmask0_fp2(i,j) = (dmask0(i+n_detx,j) gt 0.0)? dmask0(i+n_detx, j) : 0.0
-        ;;    endfor 
-        ;; endfor
-        dmask0_fp1 = dmask0[0:63, *]
-        dmask0_fp2 = dmask0[64:*, *]
-
-
-
-        
-        Contour, dmask0_fp1, PATH_INFO=info, PATH_XY=xy, XSTYLE=1, YSTYLE=1, /PATH_DATA_COORDS, /CLOSED, /NLEVELS
-        if(n_elements(xy) gt 0) then begin
  
-; (BG) Construct labels for plotting below
-           label_x = mean(xy[0, *])
-           label_y = mean(xy[1, *])
-           this_src_name = sources.src_name[ii]
-           push, labels1_x, label_x
-           push, labels1_y, label_y
-           push, labels1_name, this_src_name
-           
-        endif
+     dmask0_fp1=fltarr(n_detx, n_dety) 
+     dmask0_fp2=fltarr(n_detx, n_dety) 
 
-        Contour, dmask0_fp2, PATH_INFO=info, PATH_XY=xy, XSTYLE=1, YSTYLE=1, /PATH_DATA_COORDS, /CLOSED, /NLEVELS
-        if(n_elements(xy) gt 0) then begin
-
-; (BG) Dittor for FPMB:
-           label_x = mean(xy[0, *])
-           label_y = mean(xy[1, *])
-           this_src_name = sources.src_name[ii]
-           push, labels2_x, label_x
-           push, labels2_y, label_y
-           push, labels2_name, this_src_name
-
-
-        endif
-     endif
+     dmask0_fp1 = dmask0[0:63, *]
+     dmask0_fp2 = dmask0[64:*, *]
 
      dmask_fp1+=dmask0_fp1 
      dmask_fp2+=dmask0_fp2 
@@ -139,6 +96,10 @@ pro stray_light_render, badpix=badpix
   status.slpb=fp2_pct
   status.loss0=fp1chip0_pct
   status.loss1=fp2chip0_pct
+
+  ; Skip all plotting for this version...
+
+  return
 
   !p.multi=[0,2,1]
   !p.charsize=1.25

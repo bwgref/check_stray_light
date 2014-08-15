@@ -1,0 +1,7 @@
+Selected          897 sources with 17-60 keV flux above       5.00000 mCrab
+ABELL 1736                          103.511 mCrab
+ESO 509- G 038                      264.149 mCrab
+ESO 383-18                          12.4883 mCrab
+MCG -06-30-015                      34.5308 mCrab
+IC 4329A                            123.032 mCrab
+

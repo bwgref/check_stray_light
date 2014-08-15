@@ -1,4 +1,5 @@
-pro read_combined_catalog, ra=ra, dec=dec, src_name, src_ra, src_dec, src_flux, src_flag, slp_level=slp_level, nsrc=nsrc, fmin=fmin
+pro read_combined_catalog, ra=ra, dec=dec, src_name, src_ra, src_dec, src_flux, src_flag, slp_level=slp_level, nsrc=nsrc, fmin=fmin, $
+                           no_src = no_src
 
   ; fmin in mCrab
   if n_elements(fmin) eq 0 then fmin = 0. 
@@ -19,6 +20,7 @@ pro read_combined_catalog, ra=ra, dec=dec, src_name, src_ra, src_dec, src_flux, 
   src_flag(*)=0L
   index=where(src_flux gt fmin,selected)
   src_flag(index)=1L
+  no_src = 0
 
   nsrc=selected
   openw, lun, /get_lun, 'straylight_sources.txt'
@@ -40,6 +42,7 @@ pro read_combined_catalog, ra=ra, dec=dec, src_name, src_ra, src_dec, src_flux, 
   endelse
   goodones = where(src_flag eq 1, ngood)
   if ngood eq 0 then begin
+     no_src = 1
      message, 'No stray light targets qualify!'
   endif else begin
      src_flag = src_flag[goodones]

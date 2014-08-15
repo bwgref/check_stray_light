@@ -75,11 +75,10 @@ end
 
 
 
-pro nustar_stray_light, pnt_ra, pnt_dec, pa=pnt_pa , stray_catalog=stray_catalog, oa=oa, oaa=oaa, oab=oab, smooth=smooth, $
-            silent=silent, quit=quit, target_catalog=target_catalog, scan_step=scan_step, badpix=badpix, $
-            key=key,slp_level=slp_level, fmin=fmin, do_scan = do_scan
+pro check_stray_light, pnt_ra, pnt_dec, pnt_pa
 common nuplan, nu, status, sources, target
   forward_function read_combined_catalog
+
 
   if(n_elements(smooth) eq 0) then smooth=0  
   if(n_elements(key) eq 0) then key='nuplan'  
@@ -88,10 +87,9 @@ common nuplan, nu, status, sources, target
   if(n_elements(oaa) eq 0) then oaa=[3., 3.] 
   if(n_elements(oab) eq 0) then oab=[3., 3.] 
   if(n_elements(scan_step) eq 0) then scan_step=5.
-  if(n_elements(silent) eq 0) then silent=0
+  if(n_elements(silent) eq 0) then silent=1
   if(n_elements(quit) eq 0) then quit=0
   if n_elements(fmin) eq 0 then fmin = 5. ; default to 5 mCrab 
-  if keyword_set(do_scan) then pnt_pa = 0
 
   target={src_name:[''],src_ra:[0.0],src_dec:[0.0],src_flag:[0],index:[1]}
 
@@ -104,17 +102,7 @@ common nuplan, nu, status, sources, target
   if err eq 1 then message, "Syntax is: nustar_stray_light, ra, dec, pa=PA or nustar_stray_light, ra, dec, /do_scan"
 
 
-  ; Check for existing output files and remove
-  outfiles = ['pa_scan.dat', 'scan.pdf', 'scan.ps']
-  fi = file_info(outfiles)
-  for i = 0, n_elements(outfiles) - 1 do begin
-     if fi[i].exists then spawn, 'rm '+outfiles[i]
-     ; Set up empty files in case things crash out below.
-     spawn, 'touch '+outfiles[i]
-  endfor
-
-
-  hgap = 0.15                   ; detector half gap [mm]                                                                                                          
+  hgap = 0.15                   ; detector half gap [mm]                   
   n_detx = 64                   ; number of detector x bins 
   n_dety = 64                   ; number of detector y bins 
   d0mask = fltarr(n_detx, n_dety)
@@ -145,39 +133,16 @@ common nuplan, nu, status, sources, target
 
 ; Read in the combined BAT 70 Month and INTEGRAL galactic plane survey catalogs
   read_combined_catalog, ra=pnt_ra, dec=pnt_dec, src_name, src_ra, src_dec, src_flux, src_flag, $
-                         fmin=fmin
-  
-  sources={src_name:src_name,src_ra:src_ra,src_dec:src_dec,src_flux:src_flux,src_flag:src_flag}
+                         fmin=fmin, no_src = no_src
 
 
-  if ~keyword_set(do_scan) then begin
-     stray_light_render, badpix=badpix
+;  printf, lun, 'PA FPMA_LOSS FPMB_LOSS FPMA_DET0_LOSS FPMB_DET0_LOSS'
+  if (no_src) then begin
+     print,status.pa, status.slpa, status.slpb, status.loss0, status.loss1,format='(5f8.2)' 
   endif else begin
-
-;   print,'Running PA scan 0,360,5 deg'
-     openw, lun,  'pa_scan.dat', /get_lun
-                                ; save source list used in this run
-     for ii=0, n_elements(sources.src_name)-1 do printf,lun,'# ',$
-        sources.src_name(ii),',',sources.src_ra(ii),', ',sources.src_dec(ii),',',sources.src_flag(ii)
-     save_pa=status.pa
-     save_silent=status.silent
-     status.silent=1
-
-     setps
-     printf, lun, 'PA FPMA_LOSS FPMB_LOSS FPMA_DET0_LOSS FPMB_DET0_LOSS'
-     for s=0.0,360.0,status.scan_step do begin
-        status.pa=s
-        stray_light_render
-;      print, status.pa, status.slpa, status.slpb, status.loss0, status.loss1,format='(5f8.2)'
-        printf,lun, status.pa, status.slpa, status.slpb, status.loss0, status.loss1,format='(5f8.2)'
-     
-     endfor
-     close, lun
-     free_lun, lun
-     endps
-     spawn, 'mv idlout.pdf scan.pdf'
-     status.pa=save_pa
-     status.silent=save_silent
+     sources={src_name:src_name,src_ra:src_ra,src_dec:src_dec,src_flux:src_flux,src_flag:src_flag}
+     stray_light_render, badpix=badpix
+     print,status.pa, status.slpa, status.slpb, status.loss0, status.loss1,format='(5f8.2)' 
   endelse
 
 
