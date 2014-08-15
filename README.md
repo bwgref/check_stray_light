@@ -2,7 +2,7 @@ check_stray_light
 =================
 - Full independent of other IDL distros.
 - Note: Uses readfits.pro, sxpar.pro, and sphdist.pro (along with
-  their dependcies) from the IDL AstoLib. These files are duplicated
+  their dependencies) from the IDL AstoLib. These files are duplicated
   here in order to allow for portability of this git.
 
 usage: ./check_stray_light.sh RA DEC PA
