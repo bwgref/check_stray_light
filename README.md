@@ -12,9 +12,13 @@ All values must be in decimal degrees.
 Output:
 
 Col 1: PA
+
 Col2: FPMA Total Loss
+
 Col3: FPMB Total Loss
+
 Col4: FPMA Det0 Total Loss
+
 Col5: FPMB Det0 Total Loss:
 
 Example:
