@@ -79,7 +79,6 @@ pro check_stray_light, pnt_ra, pnt_dec, pnt_pa
 common nuplan, nu, status, sources, target
   forward_function read_combined_catalog
 
-
   if(n_elements(smooth) eq 0) then smooth=0  
   if(n_elements(key) eq 0) then key='nuplan'  
   if(n_elements(badpix) eq 0) then badpix=0  
