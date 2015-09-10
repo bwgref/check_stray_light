@@ -131,8 +131,13 @@ common nuplan, nu, status, sources, target
   nu={hgap:hgap,n_detx:n_detx,n_dety:n_dety,xpos_array:xpos_array,ypos_array:ypos_array,oa:oa,oaa:oaa,oab:oab,oa_prev:oa,fov_shift_x:0.0D,fov_shift_y:0.0D,fov_shift_step:0.5D,dr:!PI/180.,rd:180./!PI}
 
 ; Read in the combined BAT 70 Month and INTEGRAL galactic plane survey catalogs
-  read_combined_catalog, ra=pnt_ra, dec=pnt_dec, src_name, src_ra, src_dec, src_flux, src_flag, $
-                         fmin=fmin, no_src = no_src
+;  read_combined_catalog, ra=pnt_ra, dec=pnt_dec, src_name, src_ra, src_dec, src_flux, src_flag, $
+;                         fmin=fmin, no_src = no_src
+  read_bat_5mcrab_catalog, ra = pnt_ra, dec =pnt_dec, src_name, src_ra, src_dec, src_flux, src_flag, $
+                           fmin = fmin, no_src = no_src
+  sources={src_name:src_name,src_ra:src_ra,src_dec:src_dec,src_flux:src_flux,src_flag:src_flag}
+
+  
 
 
 ;  printf, lun, 'PA FPMA_LOSS FPMB_LOSS FPMA_DET0_LOSS FPMB_DET0_LOSS'
