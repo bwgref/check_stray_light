@@ -23,12 +23,12 @@ pro read_combined_catalog, ra=ra, dec=dec, src_name, src_ra, src_dec, src_flux, 
   no_src = 0
 
   nsrc=selected
-  openw, lun, /get_lun, 'straylight_sources.txt'
+;  openw, lun, /get_lun, 'straylight_sources.txt'
   if(selected eq 0) then begin 
-     printf,lun,'No source selected '
+;     printf,lun,'No source selected '
      return
   endif else begin
-     printf, lun, 'Selected ',selected,' sources with 17-60 keV flux above ', fmin,' mCrab'     
+;     printf, lun, 'Selected ',selected,' sources with 17-60 keV flux above ', fmin,' mCrab'     
      for t=0L, N_ELEMENTS(src_name)-1 do begin
         if not (src_flag[t] eq 1) then continue
         dist=sphdist(ra, dec, src_ra[t], src_dec[t], /DEGREES)
@@ -36,9 +36,9 @@ pro read_combined_catalog, ra=ra, dec=dec, src_name, src_ra, src_dec, src_flux, 
            src_flag[t]=0
            continue
         endif
-        printf,lun,src_name[t],src_flux[t],' mCrab'
+ ;       printf,lun,src_name[t],src_flux[t],' mCrab'
      endfor
-     printf, lun, ""
+;     printf, lun, ""
   endelse
   goodones = where(src_flag eq 1, ngood)
   if ngood eq 0 then begin

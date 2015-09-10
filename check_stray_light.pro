@@ -138,12 +138,12 @@ common nuplan, nu, status, sources, target
 ;  printf, lun, 'PA FPMA_LOSS FPMB_LOSS FPMA_DET0_LOSS FPMB_DET0_LOSS'
   if (no_src) then begin
      ;print,status.pa, status.slpa, status.slpb, status.loss0, status.loss1,format='(5f8.2)' 
-     print, status.loss0>status.loss1, format = '(f8.2)'
+     print, status.loss0>status.loss1, format = '(f0.2)'
   endif else begin
      sources={src_name:src_name,src_ra:src_ra,src_dec:src_dec,src_flux:src_flux,src_flag:src_flag}
      stray_light_render, badpix=badpix
 ;     print,status.pa, status.slpa, status.slpb, status.loss0, status.loss1,format='(5f8.2)' 
-     print, status.loss0>status.loss1,format = '(f8.2)'
+     print, status.loss0>status.loss1,format = '(f0.2)'
   endelse
 
 
