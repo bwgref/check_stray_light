@@ -1,4 +1,5 @@
-pro read_bat_5mcrab_catalog, ra=ra, dec=dec, src_name, src_ra, src_dec, src_flux, src_flag, slp_level=slp_level, nsrc=nsrc, fmin=fmin, no_src = no_src
+pro read_bat_5mcrab_catalog, ra=ra, dec=dec, src_name, src_ra, src_dec, src_flux, src_flag, $
+                             slp_level=slp_level, nsrc=nsrc, fmin=fmin, no_src = no_src
 
   ; fmin in mCrab
   if n_elements(fmin) eq 0 then fmin = 0. 
@@ -7,17 +8,21 @@ pro read_bat_5mcrab_catalog, ra=ra, dec=dec, src_name, src_ra, src_dec, src_flux
   Rmax=5.0
 
   cat='auxil/BAT_70m_catalog_nustar_cut_5mcrab.fits'
+;  print, cat
 
-  src = mrdfits(cat,1, /silent)
-
-
-  src_name = src.name
-  src_ra = src.raj2000
-  src_dec = src.dej2000
-  src_flux = src.flux1
-  
-
-  nsrc = n_elements(src) 
+  src=readfits(cat,header,EXTEN_NO=1,/SILENT)
+;  src = mrdfits(cat,1)
+  src_name=TBGET(header, src, 'NAME', /NOSCALE)
+  src_ra=TBGET(header, src, 'RAJ2000', /NOSCALE)
+  src_dec=TBGET(header, src, 'DEJ2000', /NOSCALE)
+  src_flux=TBGET(header, src, 'FLUX1', /NOSCALE) ; 17-60 keV flux in mCrabs
+  src_error=TBGET(header, src, 'E_FLUX1', /NOSCALE)
+;  src_name = src.name
+;  src_ra = src.raj2000
+;  src_dec = src.dej2000
+;  src_flux = src.flux1
+ 
+  nsrc = n_elements(src_name) 
 
 
   ; All are already okay:
@@ -27,8 +32,8 @@ pro read_bat_5mcrab_catalog, ra=ra, dec=dec, src_name, src_ra, src_dec, src_flux
 ;  index=where(src_flux gt fmin,selected)
 ;  src_flag(index)=1L
   src_flag(*) = 1L
-  index=where(src_flux lt 22 and src_flux gt 23,notselected)
-  src_flag[index] = 0
+;  index=where(src_flux lt 22 and src_flux gt 23,notselected)
+;  src_flag[index] = 0
 
 
 ;  nsrc=selected
